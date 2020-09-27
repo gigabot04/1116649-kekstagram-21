@@ -77,7 +77,7 @@ picture.appendChild(fragmentPhoto);
 
 // Полноэкранный размер фото
 
-const bigPictute = document.querySelector(`.big-picture`).classList.remove(`hidden`);
+const bigPictute = document.querySelector(`.big-picture`);
 const bigPictureImg = document.querySelector(`.big-picture__img`).querySelector(`img`);
 const bigPictureLikes = document.querySelector(`.likes-count`);
 const bigPictureComments = document.querySelector(`.comments-count`);
@@ -85,6 +85,8 @@ const socialComments = document.querySelector(`.social__comments`);
 const socialComment = document.querySelectorAll(`.social__comment`);
 const bigPictureDesct = document.querySelector(`.social__caption`);
 const fragmentComments = document.createDocumentFragment();
+
+bigPictute.classList.remove(`hidden`);
 
 // Пока для одной фотки
 for (let i = 0; i < photoArray.length; i++) {
