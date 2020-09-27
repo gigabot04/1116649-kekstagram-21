@@ -90,7 +90,7 @@ bigPictute.classList.remove(`hidden`);
 
 // Пока для одной фотки
 for (let i = 0; i < photoArray.length; i++) {
-  bigPictureImg.sbrc = `photos/1.jpg`;
+  bigPictureImg.src = `photos/1.jpg`;
   bigPictureLikes.textContent = photoArray[0].likes;
   bigPictureComments.textContent = photoArray[0].comments.length;
 }
