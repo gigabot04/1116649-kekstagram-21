@@ -32,7 +32,7 @@ const commentsArray = () => {
   for (let i = 0; i < getRandom(0, 20); i++) {
     const comment = {
       avatar: `img/avatar-${getRandom(1, 7)}.svg`,
-      message: message[getRandom(0, 7)],
+      message: message[getRandom(0, 6)],
       name: names[getRandom(0, 7)]
     };
     comments.push(comment);
@@ -95,16 +95,22 @@ for (let i = 0; i < photoArray.length; i++) {
   bigPictureComments.textContent = photoArray[0].comments.length;
 }
 
-const createComment = () => {
+const createComment = (comments) => {
   const copyComment = socialComment[0].cloneNode(true);
 
-  copyComment.querySelector(`.social__picture`).src = `img/avatar-2.svg`;
-  copyComment.querySelector(`.social__picture`).alt = names[0];
-  copyComment.querySelector(`.social__text`).textContent = message[0];
+  copyComment.querySelector(`.social__picture`).src = comments.avatar;
+  copyComment.querySelector(`.social__picture`).alt = comments.name;
+  copyComment.querySelector(`.social__text`).textContent = comments.message;
+
   return copyComment;
 };
 
-fragmentComments.appendChild(createComment());
+const comments = commentsArray();
+
+for (let i = 0; i < comments.length; i++) {
+  fragmentComments.appendChild(createComment(comments[i]));
+}
+
 
 // удаляем все комменты с разметки
 for (let i = 0; i < socialComment.length; i++) {
