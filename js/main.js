@@ -43,7 +43,7 @@ const commentsArray = () => {
 // Возвращается массив из 25 элементов
 const photosArray = () => {
   const photos = [];
-  for (let i = 1; i < 26; i++) {
+  for (let i = 1; i <= 25; i++) {
     const photo = {
       url: `photos/${i}.jpg`,
       description: `Описание фото`,
@@ -66,10 +66,54 @@ const renderPhoto = (photo) => {
   return photoElement;
 };
 
-const fragment = document.createDocumentFragment();
+const fragmentPhoto = document.createDocumentFragment();
+const photoArray = photosArray();
 
 for (let i = 0; i < 25; i++) {
-  const photoArray = photosArray();
-  fragment.appendChild(renderPhoto(photoArray[i]));
+  fragmentPhoto.appendChild(renderPhoto(photoArray[i]));
 }
-picture.appendChild(fragment);
+picture.appendChild(fragmentPhoto);
+
+
+// Полноэкранный размер фото
+
+const bigPictute = document.querySelector(`.big-picture`).classList.remove(`hidden`);
+const bigPictureImg = document.querySelector(`.big-picture__img`).querySelector(`img`);
+const bigPictureLikes = document.querySelector(`.likes-count`);
+const bigPictureComments = document.querySelector(`.comments-count`);
+const socialComments = document.querySelector(`.social__comments`);
+const socialComment = document.querySelectorAll(`.social__comment`);
+const bigPictureDesct = document.querySelector(`.social__caption`);
+const fragmentComments = document.createDocumentFragment();
+
+// Пока для одной фотки
+for (let i = 0; i < photoArray.length; i++) {
+  bigPictureImg.sbrc = `photos/1.jpg`;
+  bigPictureLikes.textContent = photoArray[0].likes;
+  bigPictureComments.textContent = photoArray[0].comments.length;
+}
+
+const createComment = () => {
+  const copyComment = socialComment[0].cloneNode(true);
+
+  copyComment.querySelector(`.social__picture`).src = `img/avatar-2.svg`;
+  copyComment.querySelector(`.social__picture`).alt = names[0];
+  copyComment.querySelector(`.social__text`).textContent = message[0];
+  return copyComment;
+};
+
+fragmentComments.appendChild(createComment());
+
+// удаляем все комменты с разметки
+for (let i = 0; i < socialComment.length; i++) {
+  socialComment[i].remove();
+}
+
+socialComments.appendChild(fragmentComments);
+
+bigPictureDesct.textContent = `Описание фото`;
+
+// Прячем счётчик .social__comment-count и .comments-loader
+document.querySelector(`.social__comment-count`).classList.add(`hidden`);
+document.querySelector(`.comments-loader`).classList.add(`hidden`);
+document.querySelector(`body`).classList.add(`modal-open`);
