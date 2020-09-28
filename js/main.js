@@ -32,7 +32,7 @@ const commentsArray = () => {
   for (let i = 0; i < getRandom(0, 20); i++) {
     const comment = {
       avatar: `img/avatar-${getRandom(1, 7)}.svg`,
-      message: message[getRandom(0, 7)],
+      message: message[getRandom(0, 6)],
       name: names[getRandom(0, 7)]
     };
     comments.push(comment);
@@ -43,7 +43,7 @@ const commentsArray = () => {
 // Возвращается массив из 25 элементов
 const photosArray = () => {
   const photos = [];
-  for (let i = 1; i < 26; i++) {
+  for (let i = 1; i <= 25; i++) {
     const photo = {
       url: `photos/${i}.jpg`,
       description: `Описание фото`,
@@ -66,10 +66,62 @@ const renderPhoto = (photo) => {
   return photoElement;
 };
 
-const fragment = document.createDocumentFragment();
+const fragmentPhoto = document.createDocumentFragment();
+const photoArray = photosArray();
 
 for (let i = 0; i < 25; i++) {
-  const photoArray = photosArray();
-  fragment.appendChild(renderPhoto(photoArray[i]));
+  fragmentPhoto.appendChild(renderPhoto(photoArray[i]));
 }
-picture.appendChild(fragment);
+picture.appendChild(fragmentPhoto);
+
+
+// Полноэкранный размер фото
+
+const bigPictute = document.querySelector(`.big-picture`);
+const bigPictureImg = document.querySelector(`.big-picture__img`).querySelector(`img`);
+const bigPictureLikes = document.querySelector(`.likes-count`);
+const bigPictureComments = document.querySelector(`.comments-count`);
+const socialComments = document.querySelector(`.social__comments`);
+const socialComment = document.querySelectorAll(`.social__comment`);
+const bigPictureDesct = document.querySelector(`.social__caption`);
+const fragmentComments = document.createDocumentFragment();
+
+bigPictute.classList.remove(`hidden`);
+
+// Пока для одной фотки
+for (let i = 0; i < photoArray.length; i++) {
+  bigPictureImg.src = `photos/1.jpg`;
+  bigPictureLikes.textContent = photoArray[0].likes;
+  bigPictureComments.textContent = photoArray[0].comments.length;
+}
+
+const createComment = (comments) => {
+  const copyComment = socialComment[0].cloneNode(true);
+
+  copyComment.querySelector(`.social__picture`).src = comments.avatar;
+  copyComment.querySelector(`.social__picture`).alt = comments.name;
+  copyComment.querySelector(`.social__text`).textContent = comments.message;
+
+  return copyComment;
+};
+
+const comments = commentsArray();
+
+for (let i = 0; i < comments.length; i++) {
+  fragmentComments.appendChild(createComment(comments[i]));
+}
+
+
+// удаляем все комменты с разметки
+for (let i = 0; i < socialComment.length; i++) {
+  socialComment[i].remove();
+}
+
+socialComments.appendChild(fragmentComments);
+
+bigPictureDesct.textContent = `Описание фото`;
+
+// Прячем счётчик .social__comment-count и .comments-loader
+document.querySelector(`.social__comment-count`).classList.add(`hidden`);
+document.querySelector(`.comments-loader`).classList.add(`hidden`);
+document.querySelector(`body`).classList.add(`modal-open`);
