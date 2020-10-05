@@ -77,7 +77,7 @@ picture.appendChild(fragmentPhoto);
 
 // Полноэкранный размер фото
 
-const bigPictute = document.querySelector(`.big-picture`);
+// const bigPictute = document.querySelector(`.big-picture`);
 const bigPictureImg = document.querySelector(`.big-picture__img`).querySelector(`img`);
 const bigPictureLikes = document.querySelector(`.likes-count`);
 const bigPictureComments = document.querySelector(`.comments-count`);
@@ -86,7 +86,8 @@ const socialComment = document.querySelectorAll(`.social__comment`);
 const bigPictureDesct = document.querySelector(`.social__caption`);
 const fragmentComments = document.createDocumentFragment();
 
-bigPictute.classList.remove(`hidden`);
+// bigPictute.classList.remove(`hidden`);
+// document.querySelector(`body`).classList.add(`modal-open`);
 
 // Пока для одной фотки
 for (let i = 0; i < photoArray.length; i++) {
@@ -124,4 +125,158 @@ bigPictureDesct.textContent = `Описание фото`;
 // Прячем счётчик .social__comment-count и .comments-loader
 document.querySelector(`.social__comment-count`).classList.add(`hidden`);
 document.querySelector(`.comments-loader`).classList.add(`hidden`);
-document.querySelector(`body`).classList.add(`modal-open`);
+
+// Загрузка изображения
+
+const photoEdit = document.querySelector(`.img-upload__overlay`);
+const photoPrew = document.querySelector(`.img-upload__preview img`);
+const uploadFile = document.querySelector(`#upload-file`);
+const uploadCloseBtn = document.querySelector(`.img-upload__cancel`);
+
+const onPhotoEditEscPress = (evt) => {
+  if (evt.key === `Escape`) {
+    evt.preventDefault();
+    photoEdit.classList.add(`hidden`);
+    document.querySelector(`body`).classList.remove(`modal-open`);
+  }
+};
+
+const photoEditOpen = () => {
+  photoEdit.classList.remove(`hidden`);
+  document.querySelector(`body`).classList.add(`modal-open`);
+  document.addEventListener(`keydown`, onPhotoEditEscPress);
+};
+
+const photoEditClose = () => {
+  photoEdit.classList.add(`hidden`);
+  document.querySelector(`body`).classList.remove(`modal-open`);
+  document.removeEventListener(`keydown`, onPhotoEditEscPress);
+};
+
+uploadCloseBtn.addEventListener(`click`, () => {
+  photoEditClose();
+});
+
+uploadFile.addEventListener(`change`, () => {
+  photoEditOpen();
+
+  if (uploadFile.files && uploadFile.files[0]) {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      photoPrew.setAttribute(`src`, e.target.result);
+    };
+    reader.readAsDataURL(uploadFile.files[0]);
+  }
+});
+
+// Изменение размера изображения
+
+const scaleBtnMin = document.querySelector(`.scale__control--smaller`);
+const scaleBtnMax = document.querySelector(`.scale__control--bigger`);
+const scaleControlNum = document.querySelector(`.scale__control--value`);
+let scale = 100;
+
+scaleBtnMin.addEventListener(`click`, (evt) => {
+  evt.preventDefault();
+  if (scale > 25) {
+    scale -= 25;
+    scaleControlNum.value = `${scale}%`;
+    photoPrew.style.transform = `scale(${scale / 100})`;
+  }
+});
+
+scaleBtnMax.addEventListener(`click`, (evt) => {
+  evt.preventDefault();
+  if (scale < 100) {
+    scale += 25;
+    scaleControlNum.value = `${scale}%`;
+    photoPrew.style.transform = `scale(${scale / 100})`;
+  }
+});
+
+// Добавление эффектов на превью
+// Перемещение ползунка (пин)
+
+const prewEffect = document.querySelectorAll(`.effects__item`);
+const pinLevel = document.querySelector(`.effect-level__pin`);
+const prewFilters = {
+  sepia: (value) => {
+    return `sepia(${value / 100})`;
+  },
+  grayscale: (value) => {
+    return `grayscale(${value / 100})`;
+  },
+  invert: (value) => {
+    return `invert(${value}%)`;
+  },
+  blur: (value) => {
+    return `blur(${value * 3 / 100}px)`;
+  },
+  brightness: (value) => {
+    return `brightness(${(value * 2 / 100) + 1})`;
+  },
+  none: () => {
+    return ``;
+  }
+};
+
+for (let i = 0; i < prewEffect.length; i++) {
+  prewEffect[i].addEventListener(`click`, () => {
+    const spanPrewEffect = prewEffect[i].querySelector(`.effects__preview`).classList[1];
+    photoPrew.className = ``;
+    photoPrew.classList.add(spanPrewEffect);
+    photoPrew.style.filter = ``;
+  });
+}
+
+// код для mouseup
+
+pinLevel.addEventListener(`mouseup`, () => {
+  const inputEffect = document.querySelector(`.effects__radio:checked`).value;
+  const inputPin = document.querySelector(`.effect-level__value`).value;
+  photoPrew.style.filter = prewFilters[inputEffect](inputPin);
+});
+
+// Валидация хештегов
+const hashtagsInput = document.querySelector(`.text__hashtags`);
+
+hashtagsInput.addEventListener(`focus`, () => {
+  document.removeEventListener(`keydown`, onPhotoEditEscPress);
+});
+
+hashtagsInput.addEventListener(`blur`, () => {
+  document.addEventListener(`keydown`, onPhotoEditEscPress);
+});
+
+const re = /^#[\w]*$/;
+const pushFormPrew = document.querySelector(`.img-upload__submit`);
+
+const isValidHashtag = (hashtag) => {
+  return hashtag !== `#` && re.test(hashtag) && hashtag.length > 2 && hashtag.length < 20;
+};
+
+const isDublicateHashtag = (element, index, array) => {
+  return array.indexOf(element) !== index;
+};
+
+pushFormPrew.addEventListener(`click`, (evt) => {
+  evt.preventDefault();
+  const arrayHashtag = hashtagsInput.value.split([` `]);
+  let boolean = true;
+
+  for (let i = 0; i < arrayHashtag.length; i++) {
+    arrayHashtag[i] = arrayHashtag[i].toUpperCase();
+    if (!isValidHashtag(arrayHashtag[i]) || arrayHashtag.some(isDublicateHashtag) || arrayHashtag.length > 5) {
+      boolean = false;
+    }
+  }
+
+  if (!boolean) {
+    hashtagsInput.setCustomValidity(`Есть неправильные хеш-теги`);
+    hashtagsInput.reportValidity();
+  }
+});
+
+// --------------------------------------------//
+// НЕ СДЕЛАНО: ОЧИСТКА iNPUT ЗАГРУЗКИ ФАЙЛА!!! //
+// --------------------------------------------//
