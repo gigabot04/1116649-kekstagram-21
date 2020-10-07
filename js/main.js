@@ -2,6 +2,7 @@
 
 const template = document.querySelector(`#picture`).content.querySelector(`.picture`);
 const picture = document.querySelector(`.pictures`);
+const commentArea = document.querySelector(`.text__description`);
 const message = [
   `Всё отлично!`,
   `В целом всё неплохо. Но не всё.`,
@@ -55,6 +56,20 @@ const photosArray = () => {
   return photos;
 };
 
+const openPicture = (photo) => {
+  bigPictureImg.src = photo.url;
+  bigPictureLikes.textContent = photo.likes;
+  bigPictureComments.textContent = photo.comments.length;
+
+  while (socialComments.firstChild) {
+    socialComments.removeChild(socialComments.firstChild);
+  }
+
+  socialComments.appendChild(createComment(photo.comments));
+
+  pictureOpen();
+};
+
 // К каждому элементу присваевается свой URL COMENTS LIKES
 const renderPhoto = (photo) => {
   const photoElement = template.cloneNode(true);
@@ -62,6 +77,11 @@ const renderPhoto = (photo) => {
   photoElement.querySelector(`.picture__img`).src = photo.url;
   photoElement.querySelector(`.picture__likes`).textContent = photo.likes;
   photoElement.querySelector(`.picture__comments`).textContent = photo.comments.length;
+
+  const picturePush = () => {
+    openPicture(photo);
+  };
+  photoElement.addEventListener(`click`, picturePush);
 
   return photoElement;
 };
@@ -75,17 +95,14 @@ for (let i = 0; i < 25; i++) {
 picture.appendChild(fragmentPhoto);
 
 // Полноэкранный размер фото
-
-const pictureLink = document.querySelectorAll(`.picture`);
 const bigPictureCansel = document.querySelector(`.big-picture__cancel`);
 const bigPictute = document.querySelector(`.big-picture`);
 const bigPictureImg = document.querySelector(`.big-picture__img`).querySelector(`img`);
 const bigPictureLikes = document.querySelector(`.likes-count`);
 const bigPictureComments = document.querySelector(`.comments-count`);
 const socialComments = document.querySelector(`.social__comments`);
-const socialComment = document.querySelectorAll(`.social__comment`);
+const socialComment = document.querySelector(`#comment`).content;
 const bigPictureDesct = document.querySelector(`.social__caption`);
-const fragmentComments = document.createDocumentFragment();
 
 const onPictureEscPress = (evt) => {
   if (evt.key === `Escape`) {
@@ -107,42 +124,23 @@ const pictureClose = () => {
   document.removeEventListener(`keydown`, onPictureEscPress);
 };
 
-for (let i = 0; i < photoArray.length; i++) {
-  pictureLink[i].addEventListener(`click`, () => {
-    bigPictureImg.src = `photos/${i + 1}.jpg`;
-    bigPictureLikes.textContent = photoArray[i].likes;
-    bigPictureComments.textContent = photoArray[i].comments.length;
-    pictureOpen();
-  });
-
-  bigPictureCansel.addEventListener(`click`, () => {
-    pictureClose();
-  });
-}
+bigPictureCansel.addEventListener(`click`, pictureClose);
 
 const createComment = (comments) => {
-  const copyComment = socialComment[0].cloneNode(true);
+  const fragmentComments = document.createDocumentFragment();
 
-  copyComment.querySelector(`.social__picture`).src = comments.avatar;
-  copyComment.querySelector(`.social__picture`).alt = comments.name;
-  copyComment.querySelector(`.social__text`).textContent = comments.message;
+  comments.forEach((comment) => {
+    const copyComment = socialComment.cloneNode(true);
 
-  return copyComment;
+    copyComment.querySelector(`.social__picture`).src = comment.avatar;
+    copyComment.querySelector(`.social__picture`).alt = comment.name;
+    copyComment.querySelector(`.social__text`).textContent = comment.message;
+
+    fragmentComments.appendChild(copyComment);
+  });
+
+  return fragmentComments;
 };
-
-// const comments = commentsArray();
-
-window.console.log(photoArray[0].comments);
-for (let j = 0; j < photoArray.length; j++) {
-  fragmentComments.appendChild(createComment(photoArray[j].comments[0]));
-}
-
-// удаляем все комменты с разметки
-for (let i = 0; i < socialComment.length; i++) {
-  socialComment[i].remove();
-}
-
-socialComments.appendChild(fragmentComments);
 
 bigPictureDesct.textContent = `Описание фото`;
 
@@ -299,6 +297,15 @@ pushFormPrew.addEventListener(`click`, (evt) => {
     hashtagsInput.setCustomValidity(`Есть неправильные хеш-теги`);
     hashtagsInput.reportValidity();
   }
+});
+
+// УБРАЛ ЗАКРЫТИЕ ПРИ ФОКУСЕ НА КОММЕНТАРИЙ
+commentArea.addEventListener(`focus`, () => {
+  document.removeEventListener(`keydown`, onPhotoEditEscPress);
+});
+
+commentArea.addEventListener(`blur`, () => {
+  document.addEventListener(`keydown`, onPhotoEditEscPress);
 });
 
 // --------------------------------------------//
