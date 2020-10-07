@@ -74,10 +74,11 @@ for (let i = 0; i < 25; i++) {
 }
 picture.appendChild(fragmentPhoto);
 
-
 // Полноэкранный размер фото
 
-// const bigPictute = document.querySelector(`.big-picture`);
+const pictureLink = document.querySelectorAll(`.picture`);
+const bigPictureCansel = document.querySelector(`.big-picture__cancel`);
+const bigPictute = document.querySelector(`.big-picture`);
 const bigPictureImg = document.querySelector(`.big-picture__img`).querySelector(`img`);
 const bigPictureLikes = document.querySelector(`.likes-count`);
 const bigPictureComments = document.querySelector(`.comments-count`);
@@ -86,14 +87,37 @@ const socialComment = document.querySelectorAll(`.social__comment`);
 const bigPictureDesct = document.querySelector(`.social__caption`);
 const fragmentComments = document.createDocumentFragment();
 
-// bigPictute.classList.remove(`hidden`);
-// document.querySelector(`body`).classList.add(`modal-open`);
+const onPictureEscPress = (evt) => {
+  if (evt.key === `Escape`) {
+    evt.preventDefault();
+    bigPictute.classList.add(`hidden`);
+    document.querySelector(`body`).classList.remove(`modal-open`);
+  }
+};
 
-// Пока для одной фотки
+const pictureOpen = () => {
+  bigPictute.classList.remove(`hidden`);
+  document.querySelector(`body`).classList.add(`modal-open`);
+  document.addEventListener(`keydown`, onPictureEscPress);
+};
+
+const pictureClose = () => {
+  bigPictute.classList.add(`hidden`);
+  document.querySelector(`body`).classList.remove(`modal-open`);
+  document.removeEventListener(`keydown`, onPictureEscPress);
+};
+
 for (let i = 0; i < photoArray.length; i++) {
-  bigPictureImg.src = `photos/1.jpg`;
-  bigPictureLikes.textContent = photoArray[0].likes;
-  bigPictureComments.textContent = photoArray[0].comments.length;
+  pictureLink[i].addEventListener(`click`, () => {
+    bigPictureImg.src = `photos/${i + 1}.jpg`;
+    bigPictureLikes.textContent = photoArray[i].likes;
+    bigPictureComments.textContent = photoArray[i].comments.length;
+    pictureOpen();
+  });
+
+  bigPictureCansel.addEventListener(`click`, () => {
+    pictureClose();
+  });
 }
 
 const createComment = (comments) => {
@@ -106,12 +130,12 @@ const createComment = (comments) => {
   return copyComment;
 };
 
-const comments = commentsArray();
+// const comments = commentsArray();
 
-for (let i = 0; i < comments.length; i++) {
-  fragmentComments.appendChild(createComment(comments[i]));
+window.console.log(photoArray[0].comments);
+for (let j = 0; j < photoArray.length; j++) {
+  fragmentComments.appendChild(createComment(photoArray[j].comments[0]));
 }
-
 
 // удаляем все комменты с разметки
 for (let i = 0; i < socialComment.length; i++) {
@@ -261,7 +285,7 @@ const isDublicateHashtag = (element, index, array) => {
 
 pushFormPrew.addEventListener(`click`, (evt) => {
   evt.preventDefault();
-  const arrayHashtag = hashtagsInput.value.split([` `]);
+  const arrayHashtag = hashtagsInput.value.split(` `);
   let boolean = true;
 
   for (let i = 0; i < arrayHashtag.length; i++) {
