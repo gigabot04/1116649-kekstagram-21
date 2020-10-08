@@ -2,6 +2,7 @@
 
 const template = document.querySelector(`#picture`).content.querySelector(`.picture`);
 const picture = document.querySelector(`.pictures`);
+const commentArea = document.querySelector(`.text__description`);
 const message = [
   `Всё отлично!`,
   `В целом всё неплохо. Но не всё.`,
@@ -55,6 +56,20 @@ const photosArray = () => {
   return photos;
 };
 
+const openPicture = (photo) => {
+  bigPictureImg.src = photo.url;
+  bigPictureLikes.textContent = photo.likes;
+  bigPictureComments.textContent = photo.comments.length;
+
+  while (socialComments.firstChild) {
+    socialComments.removeChild(socialComments.firstChild);
+  }
+
+  socialComments.appendChild(createComment(photo.comments));
+
+  pictureOpen();
+};
+
 // К каждому элементу присваевается свой URL COMENTS LIKES
 const renderPhoto = (photo) => {
   const photoElement = template.cloneNode(true);
@@ -62,6 +77,11 @@ const renderPhoto = (photo) => {
   photoElement.querySelector(`.picture__img`).src = photo.url;
   photoElement.querySelector(`.picture__likes`).textContent = photo.likes;
   photoElement.querySelector(`.picture__comments`).textContent = photo.comments.length;
+
+  const picturePush = () => {
+    openPicture(photo);
+  };
+  photoElement.addEventListener(`click`, picturePush);
 
   return photoElement;
 };
@@ -74,51 +94,53 @@ for (let i = 0; i < 25; i++) {
 }
 picture.appendChild(fragmentPhoto);
 
-
 // Полноэкранный размер фото
-
-// const bigPictute = document.querySelector(`.big-picture`);
+const bigPictureCansel = document.querySelector(`.big-picture__cancel`);
+const bigPictute = document.querySelector(`.big-picture`);
 const bigPictureImg = document.querySelector(`.big-picture__img`).querySelector(`img`);
 const bigPictureLikes = document.querySelector(`.likes-count`);
 const bigPictureComments = document.querySelector(`.comments-count`);
 const socialComments = document.querySelector(`.social__comments`);
-const socialComment = document.querySelectorAll(`.social__comment`);
+const socialComment = document.querySelector(`#comment`).content;
 const bigPictureDesct = document.querySelector(`.social__caption`);
-const fragmentComments = document.createDocumentFragment();
 
-// bigPictute.classList.remove(`hidden`);
-// document.querySelector(`body`).classList.add(`modal-open`);
-
-// Пока для одной фотки
-for (let i = 0; i < photoArray.length; i++) {
-  bigPictureImg.src = `photos/1.jpg`;
-  bigPictureLikes.textContent = photoArray[0].likes;
-  bigPictureComments.textContent = photoArray[0].comments.length;
-}
-
-const createComment = (comments) => {
-  const copyComment = socialComment[0].cloneNode(true);
-
-  copyComment.querySelector(`.social__picture`).src = comments.avatar;
-  copyComment.querySelector(`.social__picture`).alt = comments.name;
-  copyComment.querySelector(`.social__text`).textContent = comments.message;
-
-  return copyComment;
+const onPictureEscPress = (evt) => {
+  if (evt.key === `Escape`) {
+    evt.preventDefault();
+    bigPictute.classList.add(`hidden`);
+    document.querySelector(`body`).classList.remove(`modal-open`);
+  }
 };
 
-const comments = commentsArray();
+const pictureOpen = () => {
+  bigPictute.classList.remove(`hidden`);
+  document.querySelector(`body`).classList.add(`modal-open`);
+  document.addEventListener(`keydown`, onPictureEscPress);
+};
 
-for (let i = 0; i < comments.length; i++) {
-  fragmentComments.appendChild(createComment(comments[i]));
-}
+const pictureClose = () => {
+  bigPictute.classList.add(`hidden`);
+  document.querySelector(`body`).classList.remove(`modal-open`);
+  document.removeEventListener(`keydown`, onPictureEscPress);
+};
 
+bigPictureCansel.addEventListener(`click`, pictureClose);
 
-// удаляем все комменты с разметки
-for (let i = 0; i < socialComment.length; i++) {
-  socialComment[i].remove();
-}
+const createComment = (comments) => {
+  const fragmentComments = document.createDocumentFragment();
 
-socialComments.appendChild(fragmentComments);
+  comments.forEach((comment) => {
+    const copyComment = socialComment.cloneNode(true);
+
+    copyComment.querySelector(`.social__picture`).src = comment.avatar;
+    copyComment.querySelector(`.social__picture`).alt = comment.name;
+    copyComment.querySelector(`.social__text`).textContent = comment.message;
+
+    fragmentComments.appendChild(copyComment);
+  });
+
+  return fragmentComments;
+};
 
 bigPictureDesct.textContent = `Описание фото`;
 
@@ -261,7 +283,7 @@ const isDublicateHashtag = (element, index, array) => {
 
 pushFormPrew.addEventListener(`click`, (evt) => {
   evt.preventDefault();
-  const arrayHashtag = hashtagsInput.value.split([` `]);
+  const arrayHashtag = hashtagsInput.value.split(` `);
   let boolean = true;
 
   for (let i = 0; i < arrayHashtag.length; i++) {
@@ -275,6 +297,15 @@ pushFormPrew.addEventListener(`click`, (evt) => {
     hashtagsInput.setCustomValidity(`Есть неправильные хеш-теги`);
     hashtagsInput.reportValidity();
   }
+});
+
+// УБРАЛ ЗАКРЫТИЕ ПРИ ФОКУСЕ НА КОММЕНТАРИЙ
+commentArea.addEventListener(`focus`, () => {
+  document.removeEventListener(`keydown`, onPhotoEditEscPress);
+});
+
+commentArea.addEventListener(`blur`, () => {
+  document.addEventListener(`keydown`, onPhotoEditEscPress);
 });
 
 // --------------------------------------------//
