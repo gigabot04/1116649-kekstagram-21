@@ -28,7 +28,7 @@
 
     for (let i = 0; i < getRandom(0, 20); i++) {
       const comment = {
-        avatar: `img/avatar-${window.getRandom(1, 7)}.svg`,
+        avatar: `img/avatar-${getRandom(1, 7)}.svg`,
         message: message[getRandom(0, 6)],
         name: names[getRandom(0, 7)]
       };

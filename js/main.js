@@ -1,7 +1,7 @@
 'use strict';
 
 
-const data = window.data.photosArray();
+// const data = window.data.photosArray();
 
 // --------------------------------------------//
 // НЕ СДЕЛАНО: ОЧИСТКА iNPUT ЗАГРУЗКИ ФАЙЛА!!! //

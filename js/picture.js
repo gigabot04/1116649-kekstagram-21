@@ -17,9 +17,9 @@
       socialComments.removeChild(socialComments.firstChild);
     }
 
-    socialComments.appendChild(createComment(photo.comments));
+    socialComments.appendChild(window.preview.createComment(photo.comments));
 
-    pictureOpen();
+    window.preview.pictureOpen();
   };
 
   // К каждому элементу присваевается свой URL COMENTS LIKES
@@ -39,7 +39,7 @@
   };
 
   const fragmentPhoto = document.createDocumentFragment();
-  const photoArray = photosArray();
+  const photoArray = window.data.photosArray();
 
   for (let i = 0; i < 25; i++) {
     fragmentPhoto.appendChild(renderPhoto(photoArray[i]));
