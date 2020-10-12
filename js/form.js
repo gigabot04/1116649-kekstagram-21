@@ -3,7 +3,7 @@
 (function () {
   // Добавление эффектов на превью
   // Перемещение ползунка (пин)
-
+  const commentArea = document.querySelector(`.text__description`);
   const prewEffect = document.querySelectorAll(`.effects__item`);
   const pinLevel = document.querySelector(`.effect-level__pin`);
   const prewFilters = {
@@ -30,9 +30,9 @@
   for (let i = 0; i < prewEffect.length; i++) {
     prewEffect[i].addEventListener(`click`, () => {
       const spanPrewEffect = prewEffect[i].querySelector(`.effects__preview`).classList[1];
-      photoPrew.className = ``;
-      photoPrew.classList.add(spanPrewEffect);
-      photoPrew.style.filter = ``;
+      window.photoPrew.className = ``;
+      window.photoPrew.classList.add(spanPrewEffect);
+      window.photoPrew.style.filter = ``;
     });
   }
 
@@ -41,18 +41,18 @@
   pinLevel.addEventListener(`mouseup`, () => {
     const inputEffect = document.querySelector(`.effects__radio:checked`).value;
     const inputPin = document.querySelector(`.effect-level__value`).value;
-    photoPrew.style.filter = prewFilters[inputEffect](inputPin);
+    window.photoPrew.style.filter = prewFilters[inputEffect](inputPin);
   });
 
   // Валидация хештегов
   const hashtagsInput = document.querySelector(`.text__hashtags`);
 
   hashtagsInput.addEventListener(`focus`, () => {
-    document.removeEventListener(`keydown`, onPhotoEditEscPress);
+    document.removeEventListener(`keydown`, window.onPhotoEditEscPress);
   });
 
   hashtagsInput.addEventListener(`blur`, () => {
-    document.addEventListener(`keydown`, onPhotoEditEscPress);
+    document.addEventListener(`keydown`, window.onPhotoEditEscPress);
   });
 
   const re = /^#[\w]*$/;
@@ -86,10 +86,10 @@
 
   // УБРАЛ ЗАКРЫТИЕ ПРИ ФОКУСЕ НА КОММЕНТАРИЙ
   commentArea.addEventListener(`focus`, () => {
-    document.removeEventListener(`keydown`, onPhotoEditEscPress);
+    document.removeEventListener(`keydown`, window.onPhotoEditEscPress);
   });
 
   commentArea.addEventListener(`blur`, () => {
-    document.addEventListener(`keydown`, onPhotoEditEscPress);
+    document.addEventListener(`keydown`, window.onPhotoEditEscPress);
   });
 })();

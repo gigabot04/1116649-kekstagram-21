@@ -4,10 +4,6 @@
   // Полноэкранный размер фото
   const bigPictureCansel = document.querySelector(`.big-picture__cancel`);
   const bigPictute = document.querySelector(`.big-picture`);
-  const bigPictureImg = document.querySelector(`.big-picture__img`).querySelector(`img`);
-  const bigPictureLikes = document.querySelector(`.likes-count`);
-  const bigPictureComments = document.querySelector(`.comments-count`);
-  const socialComments = document.querySelector(`.social__comments`);
   const socialComment = document.querySelector(`#comment`).content;
   const bigPictureDesct = document.querySelector(`.social__caption`);
 
@@ -67,7 +63,7 @@
     if (scale > 25) {
       scale -= 25;
       scaleControlNum.value = `${scale}%`;
-      photoPrew.style.transform = `scale(${scale / 100})`;
+      window.photoPrew.style.transform = `scale(${scale / 100})`;
     }
   });
 
@@ -76,8 +72,11 @@
     if (scale < 100) {
       scale += 25;
       scaleControlNum.value = `${scale}%`;
-      photoPrew.style.transform = `scale(${scale / 100})`;
+      window.photoPrew.style.transform = `scale(${scale / 100})`;
     }
   });
-
+  window.preview = {
+    pictureOpen,
+    createComment
+  };
 })();

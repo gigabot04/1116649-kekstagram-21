@@ -1,6 +1,13 @@
 'use strict';
 
 (function () {
+  const bigPictureImg = document.querySelector(`.big-picture__img`).querySelector(`img`);
+  const bigPictureLikes = document.querySelector(`.likes-count`);
+  const bigPictureComments = document.querySelector(`.comments-count`);
+  const socialComments = document.querySelector(`.social__comments`);
+  const template = document.querySelector(`#picture`).content.querySelector(`.picture`);
+  const picture = document.querySelector(`.pictures`);
+
   const openPicture = (photo) => {
     bigPictureImg.src = photo.url;
     bigPictureLikes.textContent = photo.likes;
