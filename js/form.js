@@ -1,6 +1,6 @@
 'use strict';
 
-(function () {
+{
 // Добавление эффектов на превью
   // Перемещение ползунка (пин)
   const commentArea = document.querySelector(`.text__description`);
@@ -97,4 +97,4 @@
   window.formModule = {
     init
   };
-})();
+}

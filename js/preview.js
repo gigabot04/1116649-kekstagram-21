@@ -1,6 +1,6 @@
 'use strict';
 
-(function () {
+{
   const bigPictureImg = document.querySelector(`.big-picture__img`).querySelector(`img`);
   const bigPictureLikes = document.querySelector(`.likes-count`);
   const bigPictureComments = document.querySelector(`.comments-count`);
@@ -70,4 +70,4 @@
   window.previewModule = {
     openPicture
   };
-})();
+}

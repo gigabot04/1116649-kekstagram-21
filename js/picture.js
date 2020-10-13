@@ -1,6 +1,6 @@
 'use strict';
 
-(function () {
+{
   const photoPrew = document.querySelector(`.img-upload__preview img`);
   const photoEdit = document.querySelector(`.img-upload__overlay`);
   const uploadCloseBtn = document.querySelector(`.img-upload__cancel`);
@@ -77,4 +77,4 @@
   window.pictureModule = {
     uploadFile
   };
-})();
+}

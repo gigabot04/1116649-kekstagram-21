@@ -1,6 +1,6 @@
 'use strict';
 
-(function () {
+{
   const message = [
     `Всё отлично!`,
     `В целом всё неплохо. Но не всё.`,
@@ -54,4 +54,4 @@
   window.dataModule = {
     photosArray
   };
-})();
+}

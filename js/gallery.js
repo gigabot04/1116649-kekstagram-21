@@ -1,6 +1,6 @@
 'use strict';
 
-(function () {
+{
   const template = document.querySelector(`#picture`).content.querySelector(`.picture`);
 
   const renderPhoto = (photo) => {
@@ -21,4 +21,4 @@
   window.galleryModule = {
     renderPhoto
   };
-})();
+}
