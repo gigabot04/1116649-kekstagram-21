@@ -37,10 +37,10 @@
     return comments;
   };
 
-  // Возвращается массив из 25 элементов
-  const photosArray = () => {
+  // Возвращается массив фотографий
+  const photosArray = (count) => {
     const photos = [];
-    for (let i = 1; i <= 25; i++) {
+    for (let i = 1; i <= count; i++) {
       const photo = {
         url: `photos/${i}.jpg`,
         description: `Описание фото`,
@@ -51,7 +51,7 @@
     }
     return photos;
   };
-  window.data = {
+  window.dataModule = {
     photosArray
   };
 })();

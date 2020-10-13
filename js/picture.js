@@ -1,48 +1,80 @@
 'use strict';
 
 (function () {
-  const bigPictureImg = document.querySelector(`.big-picture__img`).querySelector(`img`);
-  const bigPictureLikes = document.querySelector(`.likes-count`);
-  const bigPictureComments = document.querySelector(`.comments-count`);
-  const socialComments = document.querySelector(`.social__comments`);
-  const template = document.querySelector(`#picture`).content.querySelector(`.picture`);
-  const picture = document.querySelector(`.pictures`);
+  const photoPrew = document.querySelector(`.img-upload__preview img`);
+  const photoEdit = document.querySelector(`.img-upload__overlay`);
+  const uploadCloseBtn = document.querySelector(`.img-upload__cancel`);
+  let uploadInput;
 
-  const openPicture = (photo) => {
-    bigPictureImg.src = photo.url;
-    bigPictureLikes.textContent = photo.likes;
-    bigPictureComments.textContent = photo.comments.length;
-
-    while (socialComments.firstChild) {
-      socialComments.removeChild(socialComments.firstChild);
+  const onPhotoEditEscPress = (evt) => {
+    if (evt.key === `Escape`) {
+      evt.preventDefault();
+      photoEditClose();
     }
-
-    socialComments.appendChild(window.preview.createComment(photo.comments));
-
-    window.preview.pictureOpen();
   };
 
-  // К каждому элементу присваевается свой URL COMENTS LIKES
-  const renderPhoto = (photo) => {
-    const photoElement = template.cloneNode(true);
+  const editOpenPhoto = () => {
+    photoEdit.classList.remove(`hidden`);
+    document.querySelector(`body`).classList.add(`modal-open`);
+    document.addEventListener(`keydown`, onPhotoEditEscPress);
 
-    photoElement.querySelector(`.picture__img`).src = photo.url;
-    photoElement.querySelector(`.picture__likes`).textContent = photo.likes;
-    photoElement.querySelector(`.picture__comments`).textContent = photo.comments.length;
 
-    const picturePush = () => {
-      openPicture(photo);
-    };
-    photoElement.addEventListener(`click`, picturePush);
-
-    return photoElement;
+    window.formModule.init(photoPrew, onPhotoEditEscPress);
   };
 
-  const fragmentPhoto = document.createDocumentFragment();
-  const photoArray = window.data.photosArray();
+  const photoEditClose = () => {
+    photoEdit.classList.add(`hidden`);
+    document.querySelector(`body`).classList.remove(`modal-open`);
+    document.removeEventListener(`keydown`, onPhotoEditEscPress);
+    if (uploadInput) {
+      uploadInput.value = ``;
+    }
+  };
 
-  for (let i = 0; i < 25; i++) {
-    fragmentPhoto.appendChild(renderPhoto(photoArray[i]));
-  }
-  picture.appendChild(fragmentPhoto);
+  uploadCloseBtn.addEventListener(`click`, () => {
+    photoEditClose();
+  });
+
+
+  const uploadFile = (evt) => {
+    uploadInput = evt.target;
+    editOpenPhoto();
+
+    if (uploadInput.files && uploadInput.files[0]) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        photoPrew.setAttribute(`src`, e.target.result);
+      };
+      reader.readAsDataURL(uploadInput.files[0]);
+    }
+  };
+
+  // Изменение размера изображения
+
+  const scaleBtnMin = document.querySelector(`.scale__control--smaller`);
+  const scaleBtnMax = document.querySelector(`.scale__control--bigger`);
+  const scaleControlNum = document.querySelector(`.scale__control--value`);
+  let scale = 100;
+
+  scaleBtnMin.addEventListener(`click`, (evt) => {
+    evt.preventDefault();
+    if (scale > 25) {
+      scale -= 25;
+      scaleControlNum.value = `${scale}%`;
+      photoPrew.style.transform = `scale(${scale / 100})`;
+    }
+  });
+
+  scaleBtnMax.addEventListener(`click`, (evt) => {
+    evt.preventDefault();
+    if (scale < 100) {
+      scale += 25;
+      scaleControlNum.value = `${scale}%`;
+      photoPrew.style.transform = `scale(${scale / 100})`;
+    }
+  });
+
+  window.pictureModule = {
+    uploadFile
+  };
 })();
