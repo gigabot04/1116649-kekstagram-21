@@ -49,12 +49,45 @@
       });
     }
 
-    // код для mouseup
+    const MOVEPIN_MIN = 0;
+    const MOVEPIN_MAX = 453;
 
-    pinLevel.addEventListener(`mouseup`, () => {
+    // код для movepin
+
+    pinLevel.addEventListener(`mousedown`, (evt) => {
+      evt.preventDefault();
       const inputEffect = document.querySelector(`.effects__radio:checked`).value;
-      const inputPin = document.querySelector(`.effect-level__value`).value;
-      photoPrew.style.filter = prewFilters[inputEffect](inputPin);
+      let startCoordsX = evt.clientX;
+
+      const onMouseMove = function (moveEvt) {
+        moveEvt.preventDefault();
+
+        let shift = startCoordsX - moveEvt.clientX;
+
+        startCoordsX = moveEvt.clientX;
+
+        pinLevel.style.left = `${(pinLevel.offsetLeft - shift) / (MOVEPIN_MAX / 100)}%`;
+
+        photoPrew.style.filter = prewFilters[inputEffect]((pinLevel.offsetLeft - shift) / (MOVEPIN_MAX / 100));
+
+        if (pinLevel.offsetLeft <= MOVEPIN_MIN) {
+          pinLevel.style.left = `0%`;
+          document.removeEventListener(`mousemove`, onMouseMove);
+        } else if (pinLevel.offsetLeft >= MOVEPIN_MAX) {
+          pinLevel.style.left = `100%`;
+          document.removeEventListener(`mousemove`, onMouseMove);
+        }
+      };
+
+      const onMouseUp = function (upEvt) {
+        upEvt.preventDefault();
+
+        document.removeEventListener(`mousemove`, onMouseMove);
+        document.removeEventListener(`mouseup`, onMouseUp);
+      };
+
+      document.addEventListener(`mousemove`, onMouseMove);
+      document.addEventListener(`mouseup`, onMouseUp);
     });
 
     // УБРАЛ ЗАКРЫТИЕ ПРИ ФОКУСЕ НА КОММЕНТАРИЙ
