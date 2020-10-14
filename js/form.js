@@ -6,6 +6,7 @@
   const commentArea = document.querySelector(`.text__description`);
   const prewEffect = document.querySelectorAll(`.effects__item`);
   const pinLevel = document.querySelector(`.effect-level__pin`);
+  const depthLevel = document.querySelector(`.effect-level__depth`);
   const re = /^#[a-zA-Zа-яА-ЯЁё0-9]*$/;
   const pushFormPrew = document.querySelector(`.img-upload__submit`);
   // Валидация хештегов
@@ -46,6 +47,8 @@
         photoPrew.className = ``;
         photoPrew.classList.add(spanPrewEffect);
         photoPrew.style.filter = ``;
+        pinLevel.style.left = `100%`;
+        depthLevel.style.width = `100%`;
       });
     }
 
@@ -67,15 +70,17 @@
         startCoordsX = moveEvt.clientX;
 
         pinLevel.style.left = `${(pinLevel.offsetLeft - shift) / (MOVEPIN_MAX / 100)}%`;
+        depthLevel.style.width = `${(pinLevel.offsetLeft - shift) / (MOVEPIN_MAX / 100)}%`;
 
         photoPrew.style.filter = prewFilters[inputEffect]((pinLevel.offsetLeft - shift) / (MOVEPIN_MAX / 100));
 
+
         if (pinLevel.offsetLeft <= MOVEPIN_MIN) {
           pinLevel.style.left = `0%`;
-          document.removeEventListener(`mousemove`, onMouseMove);
+          depthLevel.style.width = `0%`;
         } else if (pinLevel.offsetLeft >= MOVEPIN_MAX) {
           pinLevel.style.left = `100%`;
-          document.removeEventListener(`mousemove`, onMouseMove);
+          depthLevel.style.width = `100%`;
         }
       };
 
@@ -121,7 +126,7 @@
       }
 
       if (!boolean) {
-        hashtagsInput.setCustomValidity(`Есть неправильные хеш-теги`);
+        hashtagsInput.setCustomValidity(`Есть неправильные или повторяющиеся хеш-теги`);
         hashtagsInput.reportValidity();
       }
     });
