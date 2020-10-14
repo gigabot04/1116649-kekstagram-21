@@ -6,7 +6,7 @@
   const commentArea = document.querySelector(`.text__description`);
   const prewEffect = document.querySelectorAll(`.effects__item`);
   const pinLevel = document.querySelector(`.effect-level__pin`);
-  const re = /^#[\w]*$/;
+  const re = /^#[a-zA-Zа-яА-ЯЁё0-9]*$/;
   const pushFormPrew = document.querySelector(`.img-upload__submit`);
   // Валидация хештегов
   const hashtagsInput = document.querySelector(`.text__hashtags`);
