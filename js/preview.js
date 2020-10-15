@@ -8,9 +8,7 @@
   const socialComment = document.querySelector(`#comment`).content;
   const bigPictute = document.querySelector(`.big-picture`);
   const bigPictureCansel = document.querySelector(`.big-picture__cancel`);
-
   const bigPictureDesct = document.querySelector(`.social__caption`);
-
 
   const createComment = (comments) => {
     const fragmentComments = document.createDocumentFragment();
@@ -36,12 +34,12 @@
     }
   };
 
-  const Closepicture = () => {
+  const closePicture = () => {
     bigPictute.classList.add(`hidden`);
     document.querySelector(`body`).classList.remove(`modal-open`);
     document.removeEventListener(`keydown`, onPictureEscPress);
 
-    bigPictureCansel.removeEventListener(`click`, Closepicture);
+    bigPictureCansel.removeEventListener(`click`, closePicture);
   };
 
   const openPicture = (photo) => {
@@ -64,7 +62,7 @@
     document.querySelector(`body`).classList.add(`modal-open`);
     document.addEventListener(`keydown`, onPictureEscPress);
 
-    bigPictureCansel.addEventListener(`click`, Closepicture);
+    bigPictureCansel.addEventListener(`click`, closePicture);
   };
 
   window.previewModule = {
