@@ -4,11 +4,11 @@
   const bigPictureImg = document.querySelector(`.big-picture__img`).querySelector(`img`);
   const bigPictureLikes = document.querySelector(`.likes-count`);
   const bigPictureComments = document.querySelector(`.comments-count`);
+  const bigPictureDesc = document.querySelector(`.social__caption`);
   const socialComments = document.querySelector(`.social__comments`);
   const socialComment = document.querySelector(`#comment`).content;
   const bigPictute = document.querySelector(`.big-picture`);
   const bigPictureCansel = document.querySelector(`.big-picture__cancel`);
-  const bigPictureDesct = document.querySelector(`.social__caption`);
 
   const createComment = (comments) => {
     const fragmentComments = document.createDocumentFragment();
@@ -46,11 +46,11 @@
     bigPictureImg.src = photo.url;
     bigPictureLikes.textContent = photo.likes;
     bigPictureComments.textContent = photo.comments.length;
+    bigPictureDesc.textContent = photo.description;
 
     // Прячем счётчик .social__comment-count и .comments-loader
     document.querySelector(`.social__comment-count`).classList.add(`hidden`);
     document.querySelector(`.comments-loader`).classList.add(`hidden`);
-    bigPictureDesct.textContent = `Описание фото`;
 
     while (socialComments.firstChild) {
       socialComments.removeChild(socialComments.firstChild);
