@@ -55,10 +55,10 @@
       onLoad(xhr.response);
     });
     xhr.addEventListener(`error`, () => {
-      onError(`Произошла ошибка соединения`);
+      onError();
     });
     xhr.addEventListener(`timeout`, () => {
-      onError(`Запрос не успел выполниться за ${xhr.timeout} мс`);
+      onError();
     });
     xhr.timeout = TIMEOUT;
     xhr.open(`POST`, URL);

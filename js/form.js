@@ -141,16 +141,67 @@
       }
     });
 
+    const onMessageErrorEscPress = (evt) => {
+      if (evt.key === `Escape`) {
+        evt.preventDefault();
+        document.querySelector(`.error`).remove();
+      }
+    };
+    const onMessageSuccessEscPress = (evt) => {
+      if (evt.key === `Escape`) {
+        evt.preventDefault();
+        document.querySelector(`.success`).remove();
+      }
+    };
+
+    const successMessage = () => {
+      const fragmentSuccess = document.createDocumentFragment();
+      const templateSuccess = document.querySelector(`#success`).content;
+      const copyTemplateSucces = templateSuccess.cloneNode(true);
+      fragmentSuccess.appendChild(copyTemplateSucces);
+      document.querySelector(`main`).appendChild(fragmentSuccess);
+
+      // Удалить прослушку на кнопку
+
+      document.addEventListener(`keydown`, onMessageSuccessEscPress);
+
+      document.querySelector(`.success__button`).addEventListener(`click`, () => {
+        document.querySelector(`.success`).remove();
+      });
+    };
+    const errorMessage = () => {
+      const fragmentError = document.createDocumentFragment();
+      const templateError = document.querySelector(`#error`).content;
+      const copyTemplateError = templateError.cloneNode(true);
+      fragmentError.appendChild(copyTemplateError);
+      document.querySelector(`main`).appendChild(fragmentError);
+
+      // Удалить прослушку на кнопку
+
+      document.addEventListener(`keydown`, onMessageErrorEscPress);
+
+      // СДЕЛАТЬ ВЫБОР НОВОГО ФАЙЛА, А НЕ УДАЛЕНИЕ
+
+      document.querySelector(`.error__button`).addEventListener(`click`, () => {
+        document.querySelector(`.error`).remove();
+      });
+    };
+
     uploadForm.addEventListener(`submit`, (evt) => {
       evt.preventDefault();
       window.backend.upload(
           new FormData(uploadForm),
+          // success
           () => {
             uploadForm.reset();
             window.pictureModule.photoEditClose();
+            successMessage();
           },
-          // Потом заменить на готовый блок из template
-          uploadError);
+          // error
+          () => {
+            window.pictureModule.photoEditClose();
+            errorMessage();
+          });
     });
   };
 
