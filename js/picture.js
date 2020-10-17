@@ -75,6 +75,7 @@
   });
 
   window.pictureModule = {
-    uploadFile
+    uploadFile,
+    photoEditClose
   };
 }

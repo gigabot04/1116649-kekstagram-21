@@ -5,6 +5,7 @@
   // Перемещение ползунка (пин)
   const commentArea = document.querySelector(`.text__description`);
   const prewEffect = document.querySelectorAll(`.effects__item`);
+  const uploadForm = document.querySelector(`.img-upload__form`);
   const pinLevel = document.querySelector(`.effect-level__pin`);
   const depthLevel = document.querySelector(`.effect-level__depth`);
   const re = /^#[a-zA-Zа-яА-ЯЁё0-9]*$/;
@@ -39,7 +40,17 @@
   const isDublicateHashtag = (element, index, array) => {
     return array.indexOf(element) !== index;
   };
+  const uploadError = (errorMessage) => {
+    const node = document.createElement(`div`);
+    node.style = `z-index: 100; margin: 0 auto; text-align: center; background-color: red;`;
+    node.style.position = `absolute`;
+    node.style.left = 0;
+    node.style.right = 0;
+    node.style.fontSize = `30px`;
 
+    node.textContent = errorMessage;
+    document.body.insertAdjacentElement(`afterbegin`, node);
+  };
   const init = (photoPrew, onPhotoEditEscPress) => {
     for (let i = 0; i < prewEffect.length; i++) {
       prewEffect[i].addEventListener(`click`, () => {
@@ -113,14 +124,13 @@
     });
 
 
-    pushFormPrew.addEventListener(`click`, (evt) => {
-      evt.preventDefault();
+    pushFormPrew.addEventListener(`click`, () => {
       const arrayHashtag = hashtagsInput.value.split(` `);
       let boolean = true;
 
       for (let i = 0; i < arrayHashtag.length; i++) {
         arrayHashtag[i] = arrayHashtag[i].toUpperCase();
-        if (!isValidHashtag(arrayHashtag[i]) || arrayHashtag.some(isDublicateHashtag) || arrayHashtag.length > 5) {
+        if (hashtagsInput.value !== `` && (!isValidHashtag(arrayHashtag[i]) || arrayHashtag.some(isDublicateHashtag) || arrayHashtag.length > 5)) {
           boolean = false;
         }
       }
@@ -130,9 +140,22 @@
         hashtagsInput.reportValidity();
       }
     });
+
+    uploadForm.addEventListener(`submit`, (evt) => {
+      evt.preventDefault();
+      window.backend.upload(
+          new FormData(uploadForm),
+          () => {
+            uploadForm.reset();
+            window.pictureModule.photoEditClose();
+          },
+          // Потом заменить на готовый блок из template
+          uploadError);
+    });
   };
 
   window.formModule = {
-    init
+    init,
+    uploadError
   };
 }
