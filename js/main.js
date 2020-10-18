@@ -14,9 +14,7 @@
     picture.appendChild(fragmentPhoto);
   };
 
-  window.backend.load(
-      createPictures
-  );
+  window.backend.load(createPictures, window.formModule.uploadError);
 
   uploadFile.addEventListener(`change`, window.pictureModule.uploadFile);
 }
