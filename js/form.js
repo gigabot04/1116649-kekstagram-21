@@ -7,7 +7,7 @@
   const prewEffect = document.querySelectorAll(`.effects__item`);
   const uploadForm = document.querySelector(`.img-upload__form`);
   const pinLevel = document.querySelector(`.effect-level__pin`);
-  // const pinValue = document.querySelector(`.effect-level__value`);
+  const pinValue = document.querySelector(`.effect-level__value`);
   const depthLevel = document.querySelector(`.effect-level__depth`);
   const re = /^#[a-zA-Zа-яА-ЯЁё0-9]*$/;
   const pushFormPrew = document.querySelector(`.img-upload__submit`);
@@ -17,16 +17,16 @@
     sepia: (value) => {
       return `sepia(${value / 100})`;
     },
-    grayscale: (value) => {
+    chrome: (value) => {
       return `grayscale(${value / 100})`;
     },
-    invert: (value) => {
+    marvin: (value) => {
       return `invert(${value}%)`;
     },
-    blur: (value) => {
+    phobos: (value) => {
       return `blur(${value * 3 / 100}px)`;
     },
-    brightness: (value) => {
+    heat: (value) => {
       return `brightness(${(value * 2 / 100) + 1})`;
     },
     none: () => {
@@ -84,11 +84,9 @@
         pinLevel.style.left = `${numLevel}%`;
         depthLevel.style.width = `${numLevel}%`;
 
-        // pinValue.value = numLevel;
-        // console.log(pinValue.value = numLevel);
-
         photoPrew.style.filter = prewFilters[inputEffect](numLevel);
 
+        pinValue.value = parseInt(numLevel, 10);
 
         if (pinLevel.offsetLeft <= MOVEPIN_MIN) {
           pinLevel.style.left = `0%`;
@@ -97,7 +95,6 @@
           pinLevel.style.left = `100%`;
           depthLevel.style.width = `100%`;
         }
-
       };
 
       const onMouseUp = function (upEvt) {
