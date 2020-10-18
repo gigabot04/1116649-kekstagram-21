@@ -7,6 +7,7 @@
   const prewEffect = document.querySelectorAll(`.effects__item`);
   const uploadForm = document.querySelector(`.img-upload__form`);
   const pinLevel = document.querySelector(`.effect-level__pin`);
+  // const pinValue = document.querySelector(`.effect-level__value`);
   const depthLevel = document.querySelector(`.effect-level__depth`);
   const re = /^#[a-zA-Zа-яА-ЯЁё0-9]*$/;
   const pushFormPrew = document.querySelector(`.img-upload__submit`);
@@ -68,7 +69,7 @@
 
     // код для movepin
 
-    pinLevel.addEventListener(`mousedown`, (evt) => {
+    const moveMouse = (evt) => {
       evt.preventDefault();
       const inputEffect = document.querySelector(`.effects__radio:checked`).value;
       let startCoordsX = evt.clientX;
@@ -79,11 +80,14 @@
         let shift = startCoordsX - moveEvt.clientX;
 
         startCoordsX = moveEvt.clientX;
+        let numLevel = (pinLevel.offsetLeft - shift) / (MOVEPIN_MAX / 100);
+        pinLevel.style.left = `${numLevel}%`;
+        depthLevel.style.width = `${numLevel}%`;
 
-        pinLevel.style.left = `${(pinLevel.offsetLeft - shift) / (MOVEPIN_MAX / 100)}%`;
-        depthLevel.style.width = `${(pinLevel.offsetLeft - shift) / (MOVEPIN_MAX / 100)}%`;
+        // pinValue.value = numLevel;
+        // console.log(pinValue.value = numLevel);
 
-        photoPrew.style.filter = prewFilters[inputEffect]((pinLevel.offsetLeft - shift) / (MOVEPIN_MAX / 100));
+        photoPrew.style.filter = prewFilters[inputEffect](numLevel);
 
 
         if (pinLevel.offsetLeft <= MOVEPIN_MIN) {
@@ -93,6 +97,7 @@
           pinLevel.style.left = `100%`;
           depthLevel.style.width = `100%`;
         }
+
       };
 
       const onMouseUp = function (upEvt) {
@@ -104,7 +109,9 @@
 
       document.addEventListener(`mousemove`, onMouseMove);
       document.addEventListener(`mouseup`, onMouseUp);
-    });
+    };
+
+    pinLevel.addEventListener(`mousedown`, moveMouse);
 
     // УБРАЛ ЗАКРЫТИЕ ПРИ ФОКУСЕ НА КОММЕНТАРИЙ
     commentArea.addEventListener(`focus`, () => {
@@ -161,14 +168,14 @@
       fragmentSuccess.appendChild(copyTemplateSucces);
       document.querySelector(`main`).appendChild(fragmentSuccess);
 
-      // Удалить прослушку на кнопку
-
       document.addEventListener(`keydown`, onMessageSuccessEscPress);
 
       document.querySelector(`.success__button`).addEventListener(`click`, () => {
+        document.removeEventListener(`keydown`, onMessageSuccessEscPress);
         document.querySelector(`.success`).remove();
       });
     };
+
     const errorMessage = () => {
       const fragmentError = document.createDocumentFragment();
       const templateError = document.querySelector(`#error`).content;
@@ -176,19 +183,21 @@
       fragmentError.appendChild(copyTemplateError);
       document.querySelector(`main`).appendChild(fragmentError);
 
-      // Удалить прослушку на кнопку
-
       document.addEventListener(`keydown`, onMessageErrorEscPress);
 
       // СДЕЛАТЬ ВЫБОР НОВОГО ФАЙЛА, А НЕ УДАЛЕНИЕ
 
       document.querySelector(`.error__button`).addEventListener(`click`, () => {
+        document.removeEventListener(`keydown`, onMessageErrorEscPress);
         document.querySelector(`.error`).remove();
       });
     };
 
-    uploadForm.addEventListener(`submit`, (evt) => {
+    const submitForm = (evt) => {
       evt.preventDefault();
+      pinLevel.removeEventListener(`mousedown`, moveMouse);
+      document.removeEventListener(`keydown`, window.pictureModule.onPhotoEditEscPress);
+      uploadForm.removeEventListener(`submit`, submitForm);
       window.backend.upload(
           new FormData(uploadForm),
           // success
@@ -202,7 +211,9 @@
             window.pictureModule.photoEditClose();
             errorMessage();
           });
-    });
+    };
+
+    uploadForm.addEventListener(`submit`, submitForm);
   };
 
   window.formModule = {

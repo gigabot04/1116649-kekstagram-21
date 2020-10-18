@@ -76,6 +76,7 @@
 
   window.pictureModule = {
     uploadFile,
-    photoEditClose
+    photoEditClose,
+    onPhotoEditEscPress
   };
 }
