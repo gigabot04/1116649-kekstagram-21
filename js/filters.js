@@ -31,6 +31,8 @@
   const successLoad = (data) => {
     picturesArray = data;
     window.filtersModule.filteredPictures(picturesArray);
+    const imgFilters = document.querySelector(`.img-filters`);
+    imgFilters.classList.remove(`img-filters--inactive`);
   };
 
   const filteredPictures = (arr) => {
