@@ -11,6 +11,7 @@
   const depthLevel = document.querySelector(`.effect-level__depth`);
   const re = /^#[a-zA-Zа-яА-ЯЁё0-9]*$/;
   const pushFormPrew = document.querySelector(`.img-upload__submit`);
+  const imgFilters = document.querySelector(`.img-filters`);
   // Валидация хештегов
   const hashtagsInput = document.querySelector(`.text__hashtags`);
   const prewFilters = {
@@ -202,6 +203,7 @@
             uploadForm.reset();
             window.pictureModule.photoEditClose();
             successMessage();
+            imgFilters.classList.remove(`img-filters--inactive`);
           },
           // error
           () => {
