@@ -37,20 +37,20 @@
     if (btnFilterDefault.classList.contains(`img-filters__button--active`)) {
       createPictures(arr);
     } else if (btnFilterRandom.classList.contains(`img-filters__button--active`)) {
-
       let randPic = [];
-
       while (randPic.length < RANDOM_PICTURES) {
         const randPicture = arr[randNum(arr)];
         if (!randPic.includes(randPicture)) {
           randPic.push(randPicture);
         }
       }
-
       createPictures(randPic);
-
     } else if (btnFilterDiscussed.classList.contains(`img-filters__button--active`)) {
-      console.log(2);
+      let copy = [...picturesArray];
+      copy.sort((a, b) => {
+        return b.comments.length - a.comments.length;
+      });
+      createPictures(copy);
     }
   };
 
@@ -59,7 +59,9 @@
       const btnFilterAct = document.querySelector(`.img-filters__button--active`);
       btnFilterAct.classList.remove(`img-filters__button--active`);
       btnFilters[i].classList.add(`img-filters__button--active`);
-      filteredPictures(picturesArray);
+      window.helpersModule.debounce(() => {
+        return filteredPictures(picturesArray);
+      });
     });
   }
 
