@@ -43,35 +43,36 @@
   };
 
   const openPicture = (photo) => {
+    let copy = [...photo.comments];
     const commentLoad = document.querySelector(`.comments-loader`);
     const commentLot = document.querySelector(`.social__comment-count`);
+
+    commentLoad.classList.remove(`hidden`);
+    commentLot.classList.remove(`hidden`);
+
     bigPictureImg.src = photo.url;
     bigPictureLikes.textContent = photo.likes;
     bigPictureComments.textContent = photo.comments.length;
     bigPictureDesc.textContent = photo.description;
 
-    if (photo.comments.length > MAX_SHOW_COMMENT) {
+    if (copy.length > MAX_SHOW_COMMENT) {
       let hiddenComment = [];
 
-      while (photo.comments.length > MAX_SHOW_COMMENT) {
-        hiddenComment.push(photo.comments.pop());
+      while (copy.length > MAX_SHOW_COMMENT) {
+        hiddenComment.push(copy.pop());
       }
 
       commentLoad.addEventListener(`click`, () => {
-        socialComments.appendChild(createComment(hiddenComment));
-        hiddenComment = [];
+        const addArray = hiddenComment.splice(0, 5);
+        socialComments.appendChild(createComment(addArray));
       });
-
-    } else {
-      commentLot.classList.add(`hidden`);
-      commentLoad.classList.add(`hidden`);
     }
 
     while (socialComments.firstChild) {
       socialComments.removeChild(socialComments.firstChild);
     }
 
-    socialComments.appendChild(createComment(photo.comments));
+    socialComments.appendChild(createComment(copy));
 
     bigPictute.classList.remove(`hidden`);
     document.querySelector(`body`).classList.add(`modal-open`);
