@@ -42,9 +42,9 @@
 
     if (uploadInput.files && uploadInput.files[0]) {
       const reader = new FileReader();
-      reader.onload = (e) => {
+      reader.addEventListener(`load`, (e) => {
         photoPrew.setAttribute(`src`, e.target.result);
-      };
+      });
       reader.readAsDataURL(uploadInput.files[0]);
     }
   };
