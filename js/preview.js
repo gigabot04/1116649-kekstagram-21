@@ -9,7 +9,7 @@
   const socialComment = document.querySelector(`#comment`).content;
   const bigPictute = document.querySelector(`.big-picture`);
   const bigPictureCansel = document.querySelector(`.big-picture__cancel`);
-
+  const MAX_SHOW_COMMENT = 5;
   const createComment = (comments) => {
     const fragmentComments = document.createDocumentFragment();
 
@@ -43,14 +43,29 @@
   };
 
   const openPicture = (photo) => {
+    const commentLoad = document.querySelector(`.comments-loader`);
+    const commentLot = document.querySelector(`.social__comment-count`);
     bigPictureImg.src = photo.url;
     bigPictureLikes.textContent = photo.likes;
     bigPictureComments.textContent = photo.comments.length;
     bigPictureDesc.textContent = photo.description;
 
-    // Прячем счётчик .social__comment-count и .comments-loader
-    document.querySelector(`.social__comment-count`).classList.add(`hidden`);
-    document.querySelector(`.comments-loader`).classList.add(`hidden`);
+    if (photo.comments.length > MAX_SHOW_COMMENT) {
+      let hiddenComment = [];
+
+      while (photo.comments.length > MAX_SHOW_COMMENT) {
+        hiddenComment.push(photo.comments.pop());
+      }
+
+      commentLoad.addEventListener(`click`, () => {
+        socialComments.appendChild(createComment(hiddenComment));
+        hiddenComment = [];
+      });
+
+    } else {
+      commentLot.classList.add(`hidden`);
+      commentLoad.classList.add(`hidden`);
+    }
 
     while (socialComments.firstChild) {
       socialComments.removeChild(socialComments.firstChild);
