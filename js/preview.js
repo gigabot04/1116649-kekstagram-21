@@ -9,7 +9,6 @@
   const socialComment = document.querySelector(`#comment`).content;
   const bigPictute = document.querySelector(`.big-picture`);
   const bigPictureCansel = document.querySelector(`.big-picture__cancel`);
-  const MAX_SHOW_COMMENT = 5;
   const createComment = (comments) => {
     const fragmentComments = document.createDocumentFragment();
 
@@ -34,18 +33,38 @@
     }
   };
 
+  const comments = [];
+  const hiddenComment = [];
+
+  const commentLoad = document.querySelector(`.comments-loader`);
+  const commentLot = document.querySelector(`.social__comment-count`);
+
   const closePicture = () => {
     bigPictute.classList.add(`hidden`);
     document.querySelector(`body`).classList.remove(`modal-open`);
     document.removeEventListener(`keydown`, onPictureEscPress);
-
+    while (comments.length) {
+      comments.pop();
+    }
+    while (hiddenComment.length) {
+      hiddenComment.pop();
+    }
+    commentLoad.removeEventListener(`click`, loadComment);
     bigPictureCansel.removeEventListener(`click`, closePicture);
   };
 
+  const loadComment = () => {
+    socialComments.appendChild(createComment(hiddenComment.splice(0, 5)));
+    if (hiddenComment.length === 0) {
+      commentLoad.classList.add(`hidden`);
+      commentLot.classList.add(`hidden`);
+    }
+  };
+
   const openPicture = (photo) => {
-    let copy = [...photo.comments];
-    const commentLoad = document.querySelector(`.comments-loader`);
-    const commentLot = document.querySelector(`.social__comment-count`);
+    comments.push(...photo.comments);
+    hiddenComment.push(...comments.splice(5, comments.length));
+
 
     commentLoad.classList.remove(`hidden`);
     commentLot.classList.remove(`hidden`);
@@ -55,24 +74,13 @@
     bigPictureComments.textContent = photo.comments.length;
     bigPictureDesc.textContent = photo.description;
 
-    if (copy.length > MAX_SHOW_COMMENT) {
-      let hiddenComment = [];
-
-      while (copy.length > MAX_SHOW_COMMENT) {
-        hiddenComment.push(copy.pop());
-      }
-
-      commentLoad.addEventListener(`click`, () => {
-        const addArray = hiddenComment.splice(0, 5);
-        socialComments.appendChild(createComment(addArray));
-      });
-    }
+    commentLoad.addEventListener(`click`, loadComment);
 
     while (socialComments.firstChild) {
       socialComments.removeChild(socialComments.firstChild);
     }
 
-    socialComments.appendChild(createComment(copy));
+    socialComments.appendChild(createComment(comments));
 
     bigPictute.classList.remove(`hidden`);
     document.querySelector(`body`).classList.add(`modal-open`);
