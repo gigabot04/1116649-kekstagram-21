@@ -1,11 +1,8 @@
 'use strict';
 
-{
+const uploadFile = document.querySelector(`#upload-file`);
 
-  const uploadFile = document.querySelector(`#upload-file`);
+window.backend.load(window.filtersModule.successLoad, window.formModule.uploadError);
 
-  window.backend.load(window.filtersModule.successLoad, window.formModule.uploadError);
+uploadFile.addEventListener(`change`, window.pictureModule.uploadFile);
 
-  uploadFile.addEventListener(`change`, window.pictureModule.uploadFile);
-
-}
