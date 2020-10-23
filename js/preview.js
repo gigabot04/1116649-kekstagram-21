@@ -42,12 +42,8 @@ const closePicture = () => {
   bigPictute.classList.add(`hidden`);
   document.querySelector(`body`).classList.remove(`modal-open`);
   document.removeEventListener(`keydown`, onPictureEscPress);
-  while (comments.length) {
-    comments.pop();
-  }
-  while (hiddenComment.length) {
-    hiddenComment.pop();
-  }
+  comments.length = 0;
+  hiddenComment.length = 0;
   commentLoad.removeEventListener(`click`, loadComment);
   bigPictureCansel.removeEventListener(`click`, closePicture);
 };
