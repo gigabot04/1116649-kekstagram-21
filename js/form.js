@@ -8,7 +8,6 @@ const pinValue = document.querySelector(`.effect-level__value`);
 const depthLevel = document.querySelector(`.effect-level__depth`);
 const re = /^#[a-zA-Zа-яА-ЯЁё0-9]*$/;
 const pushFormPrew = document.querySelector(`.img-upload__submit`);
-// Валидация хештегов
 const hashtagsInput = document.querySelector(`.text__hashtags`);
 const prewFilters = {
   sepia: (value) => {
@@ -199,6 +198,8 @@ const init = (photoPrew, onPhotoEditEscPress) => {
           uploadForm.reset();
           window.pictureModule.photoEditClose();
           successMessage();
+          document.querySelector(`.img-upload__preview img`).removeAttribute(`style`, ``);
+          document.querySelector(`.img-upload__preview img`).removeAttribute(`class`, ``);
         },
         // error
         () => {

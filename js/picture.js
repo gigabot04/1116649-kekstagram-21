@@ -3,7 +3,11 @@
 const photoPrew = document.querySelector(`.img-upload__preview img`);
 const photoEdit = document.querySelector(`.img-upload__overlay`);
 const uploadCloseBtn = document.querySelector(`.img-upload__cancel`);
+const scaleBtnMin = document.querySelector(`.scale__control--smaller`);
+const scaleBtnMax = document.querySelector(`.scale__control--bigger`);
+const scaleControlNum = document.querySelector(`.scale__control--value`);
 let uploadInput;
+let scale = 100;
 
 const onPhotoEditEscPress = (evt) => {
   if (evt.key === `Escape`) {
@@ -30,11 +34,6 @@ const photoEditClose = () => {
   }
 };
 
-uploadCloseBtn.addEventListener(`click`, () => {
-  photoEditClose();
-});
-
-
 const uploadFile = (evt) => {
   uploadInput = evt.target;
   editOpenPhoto();
@@ -48,12 +47,9 @@ const uploadFile = (evt) => {
   }
 };
 
-// Изменение размера изображения
-
-const scaleBtnMin = document.querySelector(`.scale__control--smaller`);
-const scaleBtnMax = document.querySelector(`.scale__control--bigger`);
-const scaleControlNum = document.querySelector(`.scale__control--value`);
-let scale = 100;
+uploadCloseBtn.addEventListener(`click`, () => {
+  photoEditClose();
+});
 
 scaleBtnMin.addEventListener(`click`, (evt) => {
   evt.preventDefault();
