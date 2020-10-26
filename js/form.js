@@ -9,6 +9,7 @@ const depthLevel = document.querySelector(`.effect-level__depth`);
 const re = /^#[a-zA-Zа-яА-ЯЁё0-9]*$/;
 const pushFormPrew = document.querySelector(`.img-upload__submit`);
 const hashtagsInput = document.querySelector(`.text__hashtags`);
+
 const prewFilters = {
   sepia: (value) => {
     return `sepia(${value / 100})`;
@@ -31,7 +32,7 @@ const prewFilters = {
 };
 
 const isValidHashtag = (hashtag) => {
-  return hashtag !== `#` && re.test(hashtag) && hashtag.length > 2 && hashtag.length < 20;
+  return hashtag !== `#` && re.test(hashtag) && hashtag.length > 2 && hashtag.length <= 20;
 };
 
 const isDublicateHashtag = (element, index, array) => {
@@ -49,17 +50,8 @@ const uploadError = (errorMessage) => {
   document.body.insertAdjacentElement(`afterbegin`, node);
 };
 const init = (photoPrew, onPhotoEditEscPress) => {
-  for (let i = 0; i < prewEffect.length; i++) {
-    prewEffect[i].addEventListener(`click`, () => {
-      const spanPrewEffect = prewEffect[i].querySelector(`.effects__preview`).classList[1];
-      photoPrew.className = ``;
-      photoPrew.classList.add(spanPrewEffect);
-      photoPrew.style.filter = ``;
-      pinLevel.style.left = `100%`;
-      depthLevel.style.width = `100%`;
-    });
-  }
-
+  const effectItem = document.querySelectorAll(`.effects__item`);
+  const effectLevel = document.querySelector(`.img-upload__effect-level`);
   const MOVEPIN_MIN = 0;
   const MOVEPIN_MAX = 453;
 
@@ -104,6 +96,28 @@ const init = (photoPrew, onPhotoEditEscPress) => {
     document.addEventListener(`mouseup`, onMouseUp);
   };
 
+  effectLevel.classList.add(`hidden`);
+  for (let i = 0; i < effectItem.length; i++) {
+    effectItem[i].addEventListener(`click`, () => {
+      if (effectItem[i].querySelector(`#effect-none`)) {
+        effectLevel.classList.add(`hidden`);
+      } else {
+        effectLevel.classList.remove(`hidden`);
+      }
+    });
+  }
+
+  for (let i = 0; i < prewEffect.length; i++) {
+    prewEffect[i].addEventListener(`click`, () => {
+      const spanPrewEffect = prewEffect[i].querySelector(`.effects__preview`).classList[1];
+      photoPrew.className = ``;
+      photoPrew.classList.add(spanPrewEffect);
+      photoPrew.style.filter = ``;
+      pinLevel.style.left = `100%`;
+      depthLevel.style.width = `100%`;
+    });
+  }
+
   pinLevel.addEventListener(`mousedown`, moveMouse);
 
   // УБРАЛ ЗАКРЫТИЕ ПРИ ФОКУСЕ НА КОММЕНТАРИЙ
@@ -123,8 +137,7 @@ const init = (photoPrew, onPhotoEditEscPress) => {
     document.addEventListener(`keydown`, onPhotoEditEscPress);
   });
 
-
-  pushFormPrew.addEventListener(`click`, () => {
+  const validityHashtag = () => {
     const arrayHashtag = hashtagsInput.value.split(` `);
     let boolean = true;
 
@@ -138,8 +151,12 @@ const init = (photoPrew, onPhotoEditEscPress) => {
     if (!boolean) {
       hashtagsInput.setCustomValidity(`Есть неправильные или повторяющиеся хеш-теги`);
       hashtagsInput.reportValidity();
+    } else {
+      hashtagsInput.setCustomValidity(``);
     }
-  });
+  };
+
+  pushFormPrew.addEventListener(`click`, validityHashtag);
 
   const onMessageErrorEscPress = (evt) => {
     if (evt.key === `Escape`) {
@@ -178,8 +195,6 @@ const init = (photoPrew, onPhotoEditEscPress) => {
 
     document.addEventListener(`keydown`, onMessageErrorEscPress);
 
-    // СДЕЛАТЬ ВЫБОР НОВОГО ФАЙЛА, А НЕ УДАЛЕНИЕ
-
     document.querySelector(`.error__button`).addEventListener(`click`, () => {
       document.removeEventListener(`keydown`, onMessageErrorEscPress);
       document.querySelector(`.error`).remove();
@@ -198,6 +213,7 @@ const init = (photoPrew, onPhotoEditEscPress) => {
           uploadForm.reset();
           window.pictureModule.photoEditClose();
           successMessage();
+          pushFormPrew.removeEventListener(`click`, validityHashtag);
           document.querySelector(`.img-upload__preview img`).removeAttribute(`style`, ``);
           document.querySelector(`.img-upload__preview img`).removeAttribute(`class`, ``);
         },
