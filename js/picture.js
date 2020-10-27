@@ -29,6 +29,9 @@ const photoEditClose = () => {
   photoEdit.classList.add(`hidden`);
   document.querySelector(`body`).classList.remove(`modal-open`);
   document.removeEventListener(`keydown`, onPhotoEditEscPress);
+  document.querySelector(`.img-upload__preview img`).removeAttribute(`style`, ``);
+  document.querySelector(`.img-upload__preview img`).removeAttribute(`class`, ``);
+  scale = 100;
   if (uploadInput) {
     uploadInput.value = ``;
   }

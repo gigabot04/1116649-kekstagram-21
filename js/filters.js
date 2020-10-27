@@ -2,14 +2,9 @@
 
 const picture = document.querySelector(`.pictures`);
 const btnFilters = document.querySelectorAll(`.img-filters__button`);
-const btnFilterDefault = document.querySelector(`#filter-default`);
 const btnFilterRandom = document.querySelector(`#filter-random`);
 const btnFilterDiscussed = document.querySelector(`#filter-discussed`);
 const RANDOM_PICTURES = 10;
-
-const randNum = (arr) => {
-  return Math.floor(Math.random() * arr.length);
-};
 
 const createPictures = (arr) => {
   while (document.querySelector(`.picture`)) {
@@ -35,31 +30,22 @@ const successLoad = (data) => {
 };
 
 const filteredPictures = (arr) => {
-  if (btnFilterDefault.classList.contains(`img-filters__button--active`)) {
-    createPictures(arr);
-  } else if (btnFilterRandom.classList.contains(`img-filters__button--active`)) {
-    let randPic = [];
-    while (randPic.length < RANDOM_PICTURES) {
-      const randPicture = arr[randNum(arr)];
-      if (!randPic.includes(randPicture)) {
-        randPic.push(randPicture);
-      }
-    }
-    createPictures(randPic);
+  let pics = arr;
+  if (btnFilterRandom.classList.contains(`img-filters__button--active`)) {
+    pics = [...arr].sort(() => Math.random() - 0.5).slice(0, RANDOM_PICTURES);
   } else if (btnFilterDiscussed.classList.contains(`img-filters__button--active`)) {
-    let copy = [...picturesArray];
-    copy.sort((a, b) => {
+    pics = [...picturesArray].sort((a, b) => {
       return b.comments.length - a.comments.length;
     });
-    createPictures(copy);
   }
+  createPictures(pics);
 };
 
-for (let i = 0; i < btnFilters.length; i++) {
-  btnFilters[i].addEventListener(`click`, () => {
+for (let btn of btnFilters) {
+  btn.addEventListener(`click`, () => {
     const btnFilterAct = document.querySelector(`.img-filters__button--active`);
     btnFilterAct.classList.remove(`img-filters__button--active`);
-    btnFilters[i].classList.add(`img-filters__button--active`);
+    btn.classList.add(`img-filters__button--active`);
     window.helpersModule.debounce(() => {
       return filteredPictures(picturesArray);
     });

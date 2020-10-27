@@ -10,7 +10,7 @@ const re = /^#[a-zA-Zа-яА-ЯЁё0-9]*$/;
 const pushFormPrew = document.querySelector(`.img-upload__submit`);
 const hashtagsInput = document.querySelector(`.text__hashtags`);
 
-const prewFilters = {
+const PrewFilters = {
   sepia: (value) => {
     return `sepia(${value / 100})`;
   },
@@ -62,7 +62,7 @@ const init = (photoPrew, onPhotoEditEscPress) => {
     const inputEffect = document.querySelector(`.effects__radio:checked`).value;
     let startCoordsX = evt.clientX;
 
-    const onMouseMove = function (moveEvt) {
+    const onMouseMove = (moveEvt) => {
       moveEvt.preventDefault();
 
       let shift = startCoordsX - moveEvt.clientX;
@@ -72,7 +72,7 @@ const init = (photoPrew, onPhotoEditEscPress) => {
       pinLevel.style.left = `${numLevel}%`;
       depthLevel.style.width = `${numLevel}%`;
 
-      photoPrew.style.filter = prewFilters[inputEffect](numLevel);
+      photoPrew.style.filter = PrewFilters[inputEffect](numLevel);
 
       pinValue.value = parseInt(numLevel, 10);
 
@@ -85,7 +85,7 @@ const init = (photoPrew, onPhotoEditEscPress) => {
       }
     };
 
-    const onMouseUp = function (upEvt) {
+    const onMouseUp = (upEvt) => {
       upEvt.preventDefault();
 
       document.removeEventListener(`mousemove`, onMouseMove);
@@ -97,9 +97,9 @@ const init = (photoPrew, onPhotoEditEscPress) => {
   };
 
   effectLevel.classList.add(`hidden`);
-  for (let i = 0; i < effectItem.length; i++) {
-    effectItem[i].addEventListener(`click`, () => {
-      if (effectItem[i].querySelector(`#effect-none`)) {
+  for (let item of effectItem) {
+    item.addEventListener(`click`, () => {
+      if (item.querySelector(`#effect-none`)) {
         effectLevel.classList.add(`hidden`);
       } else {
         effectLevel.classList.remove(`hidden`);
@@ -107,9 +107,9 @@ const init = (photoPrew, onPhotoEditEscPress) => {
     });
   }
 
-  for (let i = 0; i < prewEffect.length; i++) {
-    prewEffect[i].addEventListener(`click`, () => {
-      const spanPrewEffect = prewEffect[i].querySelector(`.effects__preview`).classList[1];
+  for (let effect of prewEffect) {
+    effect.addEventListener(`click`, () => {
+      const spanPrewEffect = effect.querySelector(`.effects__preview`).classList[1];
       photoPrew.className = ``;
       photoPrew.classList.add(spanPrewEffect);
       photoPrew.style.filter = ``;
@@ -137,7 +137,7 @@ const init = (photoPrew, onPhotoEditEscPress) => {
     document.addEventListener(`keydown`, onPhotoEditEscPress);
   });
 
-  const validityHashtag = () => {
+  const validationHashtag = () => {
     const arrayHashtag = hashtagsInput.value.split(` `);
     let boolean = true;
 
@@ -156,7 +156,7 @@ const init = (photoPrew, onPhotoEditEscPress) => {
     }
   };
 
-  pushFormPrew.addEventListener(`click`, validityHashtag);
+  pushFormPrew.addEventListener(`click`, validationHashtag);
 
   const onMessageErrorEscPress = (evt) => {
     if (evt.key === `Escape`) {
@@ -171,7 +171,7 @@ const init = (photoPrew, onPhotoEditEscPress) => {
     }
   };
 
-  const successMessage = () => {
+  const getSuccessMessage = () => {
     const fragmentSuccess = document.createDocumentFragment();
     const templateSuccess = document.querySelector(`#success`).content;
     const copyTemplateSucces = templateSuccess.cloneNode(true);
@@ -186,7 +186,7 @@ const init = (photoPrew, onPhotoEditEscPress) => {
     });
   };
 
-  const errorMessage = () => {
+  const getErrorMessage = () => {
     const fragmentError = document.createDocumentFragment();
     const templateError = document.querySelector(`#error`).content;
     const copyTemplateError = templateError.cloneNode(true);
@@ -212,15 +212,15 @@ const init = (photoPrew, onPhotoEditEscPress) => {
         () => {
           uploadForm.reset();
           window.pictureModule.photoEditClose();
-          successMessage();
-          pushFormPrew.removeEventListener(`click`, validityHashtag);
+          getSuccessMessage();
+          pushFormPrew.removeEventListener(`click`, validationHashtag);
           document.querySelector(`.img-upload__preview img`).removeAttribute(`style`, ``);
           document.querySelector(`.img-upload__preview img`).removeAttribute(`class`, ``);
         },
         // error
         () => {
           window.pictureModule.photoEditClose();
-          errorMessage();
+          getErrorMessage();
         });
   };
 
