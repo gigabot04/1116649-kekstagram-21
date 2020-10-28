@@ -22,14 +22,14 @@ const createPictures = (arr) => {
 
 let picturesArray = [];
 
-const successLoad = (data) => {
+const loadingSuccess = (data) => {
   picturesArray = data;
-  window.filtersModule.filteredPictures(picturesArray);
+  window.filtersModule.filterPictures(picturesArray);
   const imgFilters = document.querySelector(`.img-filters`);
   imgFilters.classList.remove(`img-filters--inactive`);
 };
 
-const filteredPictures = (arr) => {
+const filterPictures = (arr) => {
   let pics = arr;
   if (btnFilterRandom.classList.contains(`img-filters__button--active`)) {
     pics = [...arr].sort(() => Math.random() - 0.5).slice(0, RANDOM_PICTURES);
@@ -47,13 +47,13 @@ btnFilters.forEach((btn) => {
     btnFilterAct.classList.remove(`img-filters__button--active`);
     btn.classList.add(`img-filters__button--active`);
     window.helpersModule.debounce(() => {
-      return filteredPictures(picturesArray);
+      return filterPictures(picturesArray);
     });
   });
 });
 
 window.filtersModule = {
-  filteredPictures,
+  filterPictures,
   createPictures,
-  successLoad
+  loadingSuccess
 };

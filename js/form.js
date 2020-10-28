@@ -55,8 +55,6 @@ const init = (photoPrew, onPhotoEditEscPress) => {
   const MOVEPIN_MIN = 0;
   const MOVEPIN_MAX = 453;
 
-  // код для movepin
-
   const moveMouse = (evt) => {
     evt.preventDefault();
     const inputEffect = document.querySelector(`.effects__radio:checked`).value;
@@ -120,7 +118,6 @@ const init = (photoPrew, onPhotoEditEscPress) => {
 
   pinLevel.addEventListener(`mousedown`, moveMouse);
 
-  // УБРАЛ ЗАКРЫТИЕ ПРИ ФОКУСЕ НА КОММЕНТАРИЙ
   commentArea.addEventListener(`focus`, () => {
     document.removeEventListener(`keydown`, onPhotoEditEscPress);
   });
@@ -171,7 +168,7 @@ const init = (photoPrew, onPhotoEditEscPress) => {
     }
   };
 
-  const getSuccessMessage = () => {
+  const showSuccessMessage = () => {
     const fragmentSuccess = document.createDocumentFragment();
     const templateSuccess = document.querySelector(`#success`).content;
     const copyTemplateSucces = templateSuccess.cloneNode(true);
@@ -208,16 +205,14 @@ const init = (photoPrew, onPhotoEditEscPress) => {
     uploadForm.removeEventListener(`submit`, submitForm);
     window.backend.upload(
         new FormData(uploadForm),
-        // success
         () => {
           uploadForm.reset();
           window.pictureModule.photoEditClose();
-          getSuccessMessage();
+          showSuccessMessage();
           pushFormPrew.removeEventListener(`click`, validatеHashtag);
           document.querySelector(`.img-upload__preview img`).removeAttribute(`style`, ``);
           document.querySelector(`.img-upload__preview img`).removeAttribute(`class`, ``);
         },
-        // error
         () => {
           window.pictureModule.photoEditClose();
           getErrorMessage();
