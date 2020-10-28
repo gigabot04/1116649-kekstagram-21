@@ -97,7 +97,7 @@ const init = (photoPrew, onPhotoEditEscPress) => {
   };
 
   effectLevel.classList.add(`hidden`);
-  for (let item of effectItem) {
+  effectItem.forEach((item) => {
     item.addEventListener(`click`, () => {
       if (item.querySelector(`#effect-none`)) {
         effectLevel.classList.add(`hidden`);
@@ -105,9 +105,9 @@ const init = (photoPrew, onPhotoEditEscPress) => {
         effectLevel.classList.remove(`hidden`);
       }
     });
-  }
+  });
 
-  for (let effect of prewEffect) {
+  prewEffect.forEach((effect) => {
     effect.addEventListener(`click`, () => {
       const spanPrewEffect = effect.querySelector(`.effects__preview`).classList[1];
       photoPrew.className = ``;
@@ -116,7 +116,7 @@ const init = (photoPrew, onPhotoEditEscPress) => {
       pinLevel.style.left = `100%`;
       depthLevel.style.width = `100%`;
     });
-  }
+  });
 
   pinLevel.addEventListener(`mousedown`, moveMouse);
 
@@ -137,16 +137,16 @@ const init = (photoPrew, onPhotoEditEscPress) => {
     document.addEventListener(`keydown`, onPhotoEditEscPress);
   });
 
-  const validationHashtag = () => {
+  const validatеHashtag = () => {
     const arrayHashtag = hashtagsInput.value.split(` `);
     let boolean = true;
 
-    for (let i = 0; i < arrayHashtag.length; i++) {
-      arrayHashtag[i] = arrayHashtag[i].toUpperCase();
-      if (hashtagsInput.value !== `` && (!isValidHashtag(arrayHashtag[i]) || arrayHashtag.some(isDublicateHashtag) || arrayHashtag.length > 5)) {
+    arrayHashtag.forEach((hashtag) => {
+      hashtag = hashtag.toUpperCase();
+      if (hashtagsInput.value !== `` && (!isValidHashtag(hashtag) || arrayHashtag.some(isDublicateHashtag) || arrayHashtag.length > 5)) {
         boolean = false;
       }
-    }
+    });
 
     if (!boolean) {
       hashtagsInput.setCustomValidity(`Есть неправильные или повторяющиеся хеш-теги`);
@@ -156,7 +156,7 @@ const init = (photoPrew, onPhotoEditEscPress) => {
     }
   };
 
-  pushFormPrew.addEventListener(`click`, validationHashtag);
+  pushFormPrew.addEventListener(`click`, validatеHashtag);
 
   const onMessageErrorEscPress = (evt) => {
     if (evt.key === `Escape`) {
@@ -213,7 +213,7 @@ const init = (photoPrew, onPhotoEditEscPress) => {
           uploadForm.reset();
           window.pictureModule.photoEditClose();
           getSuccessMessage();
-          pushFormPrew.removeEventListener(`click`, validationHashtag);
+          pushFormPrew.removeEventListener(`click`, validatеHashtag);
           document.querySelector(`.img-upload__preview img`).removeAttribute(`style`, ``);
           document.querySelector(`.img-upload__preview img`).removeAttribute(`class`, ``);
         },

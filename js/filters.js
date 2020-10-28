@@ -41,7 +41,7 @@ const filteredPictures = (arr) => {
   createPictures(pics);
 };
 
-for (let btn of btnFilters) {
+btnFilters.forEach((btn) => {
   btn.addEventListener(`click`, () => {
     const btnFilterAct = document.querySelector(`.img-filters__button--active`);
     btnFilterAct.classList.remove(`img-filters__button--active`);
@@ -50,7 +50,7 @@ for (let btn of btnFilters) {
       return filteredPictures(picturesArray);
     });
   });
-}
+});
 
 window.filtersModule = {
   filteredPictures,

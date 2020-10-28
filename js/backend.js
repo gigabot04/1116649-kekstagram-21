@@ -2,10 +2,11 @@
 
 const uploadURL = `https://21.javascript.pages.academy/kekstagram/`;
 const TIMEOUT = 10000;
-const xhr = new XMLHttpRequest();
+
 const loadURL = `https://21.javascript.pages.academy/kekstagram/data`;
 
 const load = (onLoad, onError) => {
+  const xhr = new XMLHttpRequest();
   xhr.responseType = `json`;
 
   xhr.open(`GET`, loadURL);
@@ -46,6 +47,7 @@ const load = (onLoad, onError) => {
 };
 
 const upload = (data, onLoad, onError) => {
+  const xhr = new XMLHttpRequest();
   xhr.responseType = `json`;
 
   xhr.addEventListener(`load`, () => {
